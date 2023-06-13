@@ -1,16 +1,35 @@
-import * as readline from "node:readline/promises";
-import { stdin as input, stdout as output } from "node:process";
-import { isEmail } from "./isEmail.js";
+import fs from "fs"
 
-const rl = readline.createInterface({ input, output });
+const data = fs.readFileSync("src/supermercado.ros", "utf-8");
 
-const email = await rl.question("Please, enter an email: ");
-rl.close();
+const arrayData = data.split("\n");
+// const itemsData = []
 
-const isValid = isEmail(email);
+// arrayData.forEach((element) => {
+//   itemsData.push(element.split(","))
+// })
 
-if (isValid) {
-  console.log("The email is valid");
-} else {
-  console.log("The email is invalid");
-}
+const itemsData = arrayData.map((element) => {
+  return element.split(",")
+})
+
+const dataNoHeader = itemsData.slice(1)
+console.log(dataNoHeader)
+
+const item = dataNoHeader.map((element) => {
+  return {
+    name: element[0],
+    quantity: parseInt(element[1]),
+    price: parseFloat(element[2])
+  }
+})
+
+const result = item.reduce((acc, item) => {
+  return acc + item.quantity * item.price;
+}, 0)
+
+console.log(result)
+
+// const result = (numberApples * priceApples) + (numberAvocados * priceAvocados);
+
+// console.log(result)
