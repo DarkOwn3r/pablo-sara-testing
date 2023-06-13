@@ -1,35 +1,28 @@
-import fs from "fs"
+import fs from "fs";
 
-const data = fs.readFileSync("src/supermercado.ros", "utf-8");
+export function totalEarnings() {
+  const data = fs.readFileSync("src/supermercado.ros", "utf-8");
 
-const arrayData = data.split("\n");
-// const itemsData = []
+  const arrayData = data.split("\n");
 
-// arrayData.forEach((element) => {
-//   itemsData.push(element.split(","))
-// })
+  const itemsData = arrayData.map((element) => {
+    return element.split(",");
+  });
 
-const itemsData = arrayData.map((element) => {
-  return element.split(",")
-})
+  const dataNoHeader = itemsData.slice(1);
+  console.log(dataNoHeader);
 
-const dataNoHeader = itemsData.slice(1)
-console.log(dataNoHeader)
+  const item = dataNoHeader.map((element) => {
+    return {
+      name: element[0],
+      quantity: parseInt(element[1]),
+      price: parseFloat(element[2]),
+    };
+  });
 
-const item = dataNoHeader.map((element) => {
-  return {
-    name: element[0],
-    quantity: parseInt(element[1]),
-    price: parseFloat(element[2])
-  }
-})
+  const result = item.reduce((acc, item) => {
+    return acc + item.quantity * item.price;
+  }, 0);
 
-const result = item.reduce((acc, item) => {
-  return acc + item.quantity * item.price;
-}, 0)
-
-console.log(result)
-
-// const result = (numberApples * priceApples) + (numberAvocados * priceAvocados);
-
-// console.log(result)
+  return result;
+}
